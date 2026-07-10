@@ -642,7 +642,7 @@ footer p{color:var(--gray-2);font-size:.8rem;font-family:'IBM Plex Mono',monospa
           <div class="avatar">RT</div>
           <div>
             <b>Ricardo Tavares</b>
-            <small>Diretor Comercial · Indústria de embalagens, SP</small>
+            <small>Diretor Comercial · ELOPLAST, SP</small>
             <span class="prod">Implantação Comercial</span>
           </div>
         </div>
@@ -650,13 +650,13 @@ footer p{color:var(--gray-2);font-size:.8rem;font-family:'IBM Plex Mono',monospa
 
       <!-- SUBSTITUIR: nome, cargo, empresa e números por cliente real com autorização -->
       <article class="tcard reveal">
-        <p class="quote">Eu pagava R$ 380 por lead de anúncio que não fechava e o time ficava parado esperando agenda. A Resolve colocou <strong>31 decisores na minha agenda em 60 dias</strong>. O CAC caiu 40% e fechamos 5 contratos no trimestre.</p>
+        <p class="quote">Eu pagava R$ 380 por lead qualificado de anúncio e não fechava, o time ficava parado esperando agenda. A Resolve colocou <strong>31 decisores na minha agenda em 60 dias</strong>. O CAC caiu 40% e fechamos 5 contratos no trimestre.</p>
         <div class="metric-row"><b>-40%</b><span>de CAC nos primeiros 60 dias</span></div>
         <div class="person">
           <div class="avatar">MD</div>
           <div>
             <b>Marina Duarte</b>
-            <small>CEO · Software house B2B, Recife</small>
+            <small>CEO · SYNESTESIA, Recife</small>
             <span class="prod">Geração de Demanda</span>
           </div>
         </div>
@@ -670,7 +670,7 @@ footer p{color:var(--gray-2);font-size:.8rem;font-family:'IBM Plex Mono',monospa
           <div class="avatar">FA</div>
           <div>
             <b>Fábio Albuquerque</b>
-            <small>Sócio · Distribuidora B2B, Nordeste</small>
+            <small>Sócio · Alcançar Distribuidora, Nordeste</small>
             <span class="prod">Ativo Comercial</span>
           </div>
         </div>
@@ -688,8 +688,8 @@ footer p{color:var(--gray-2);font-size:.8rem;font-family:'IBM Plex Mono',monospa
     <p class="section-lead">De multinacional a operação local. Toque no seu segmento e veja o que mudou.</p>
     <div class="marquee reveal" aria-hidden="true">
       <div class="marquee-track">
-        <span>BMW <i></i> Coca-Cola <i></i> SERASA <i></i> Ecossistema NJR <i></i> Nestlé <i></i> Agência B2W <i></i> Globo Nordeste <i></i> Hunters <i></i> Baterias Moura <i></i> UP <i></i> Shopping Recife <i></i> Nova Digital <i></i> Unilever <i></i> Ecossistema NJR <i></i></span>
-        <span>BMW <i></i> Coca-Cola <i></i> SERASA <i></i> Ecossistema NJR <i></i> Nestlé <i></i> Agência B2W <i></i> Globo Nordeste <i></i> Hunters <i></i> Baterias Moura <i></i> UP <i></i> Shopping Recife <i></i> Nova Digital <i></i> Unilever <i></i> Ecossistema NJR <i></i></span>
+        <span>BMW <i></i> Coca-Cola <i></i> SERASA <i></i> Ecossistema NJR <i></i> Nestlé <i></i> Agência B2W <i></i> Globo Nordeste <i></i> Hunters <i></i> Baterias Moura <i></i> UP <i></i> Ecossistema NJR  <i></i> Nova Digital <i></i> Unilever <i></i> Shopping Recife <i></i></span>
+        <span>BMW <i></i> Coca-Cola <i></i> SERASA <i></i> Ecossistema NJR <i></i> Nestlé <i></i> Agência B2W <i></i> Globo Nordeste <i></i> Hunters <i></i> Baterias Moura <i></i> UP <i></i> Ecossistema NJR  <i></i> Nova Digital <i></i> Unilever <i></i> Shopping Recife <i></i></span>
       </div>
     </div>
     <div class="segs">
