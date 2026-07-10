@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resolve Company · Solução, Decisão e Execução</title>
+<meta name="description" content="Prospecção outbound B2B com inteligência de mercado. 28 toques, 4 canais, reuniões com decisores. Resultado garantido.">
+<!-- Troque a URL abaixo pela imagem de preview hospedada no seu domínio (1200x630px) -->
+<meta property="og:title" content="Resolve Company">
+<meta property="og:description" content="Queremos vender pra você. Sem tráfego pago. ROI positivo ou seu dinheiro de volta.">
+<meta property="og:image" content="https://SEUDOMINIO.com.br/og-resolve.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080A;
+  --panel:#101014;
+  --panel-2:#16161C;
+  --line:#23232C;
+  --blue:#2456F5;
+  --blue-soft:#4D7BFF;
+  --white:#FFFFFF;
+  --gray:#9CA0AC;
+  --gray-2:#5C5F6A;
+  --wa:#25D366;
+  --radius:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--white);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:56px 56px;
+  opacity:.14;
+  pointer-events:none;
+  z-index:0;
+}
+main{position:relative;z-index:1}
+
+/* ===== TIPOGRAFIA ===== */
+.display{
+  font-family:'Archivo Black',sans-serif;
+  text-transform:uppercase;
+  line-height:.95;
+  letter-spacing:-.01em;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--blue-soft);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:16px;
+}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--blue)}
+.section-title{font-size:clamp(1.9rem,6.5vw,3.2rem);margin-bottom:14px}
+.section-lead{color:var(--gray);max-width:560px;font-size:.98rem}
+.accent{color:var(--blue-soft)}
+
+/* ===== NAV ===== */
+nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(8,8,10,.82);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:1080px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+}
+.logo{font-family:'Archivo Black',sans-serif;font-size:1.05rem;letter-spacing:.04em}
+.logo span{color:var(--blue-soft)}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{
+  color:var(--gray);text-decoration:none;
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 12px;border-radius:8px;white-space:nowrap;
+  transition:color .2s;
+}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--white)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--blue-soft);outline-offset:3px}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:76px 0}
+
+/* ===== HERO ===== */
+.hero{padding:84px 0 64px;position:relative}
+.hero::after{
+  content:"";position:absolute;top:-120px;right:-180px;
+  width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle, rgba(36,86,245,.22), transparent 65%);
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gray);
+  border:1px solid var(--line);border-radius:100px;
+  padding:7px 14px;margin-bottom:26px;background:var(--panel);
+}
+.hero-tag i{width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block;
+  animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(2.6rem,10vw,5.4rem);margin-bottom:22px}
+.hero h1 .line2{color:var(--blue-soft)}
+.hero p{color:var(--gray);max-width:520px;font-size:1.05rem}
+
+/* ===== GARANTIA ===== */
+.garantia{
+  margin:38px 0 44px;
+  border:1px solid rgba(77,123,255,.5);
+  background:linear-gradient(100deg, rgba(36,86,245,.22), rgba(36,86,245,.04) 70%);
+  border-radius:var(--radius);
+  padding:26px 24px;
+  position:relative;overflow:hidden;
+}
+.garantia::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+.garantia b{
+  font-family:'Archivo Black',sans-serif;text-transform:uppercase;
+  font-size:clamp(1.3rem,5vw,2rem);display:block;line-height:1.05;
+}
+.garantia b em{font-style:normal;color:var(--blue-soft)}
+.garantia span{color:var(--gray);font-size:.94rem;display:block;margin-top:8px;max-width:520px}
+
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:760px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:22px 18px;
+  position:relative;overflow:hidden;
+}
+.stat::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--blue)}
+.stat b{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(1.6rem,5vw,2.2rem);
+  display:block;line-height:1.1;
+}
+.stat small{color:var(--gray);font-size:.78rem;line-height:1.4;display:block;margin-top:6px}
+
+/* ===== QUEREMOS VENDER ===== */
+.vender{border-top:1px solid var(--line)}
+.vender h2{font-size:clamp(2.2rem,8vw,4.2rem)}
+.no-ads{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.85rem,3vw,1.05rem);
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gray);margin:18px 0 10px;
+}
+.no-ads strong{color:var(--white)}
+.vender .section-lead{margin-bottom:8px}
+.steps{display:grid;gap:12px;margin-top:38px}
+@media(min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 22px;position:relative;
+}
+.step em{
+  font-style:normal;font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem;letter-spacing:.18em;color:var(--blue-soft);
+  display:block;margin-bottom:12px;
+}
+.step h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:1.05rem;margin-bottom:8px}
+.step p{color:var(--gray);font-size:.88rem}
+
+/* ===== ADS ===== */
+.ads-grid{display:grid;gap:12px;margin-top:36px}
+@media(min-width:760px){.ads-grid{grid-template-columns:repeat(3,1fr)}}
+.ads-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 20px;
+}
+.ads-card h3{font-size:1rem;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.ads-card h3 em{font-style:normal;color:var(--gray-2);font-family:'IBM Plex Mono',monospace;font-size:.75rem}
+.ads-card p{color:var(--gray);font-size:.88rem}
+.ads-punch{
+  margin-top:14px;background:var(--blue);border-radius:var(--radius);
+  padding:26px 24px;
+}
+.ads-punch b{font-family:'Archivo Black',sans-serif;font-size:1.25rem;text-transform:uppercase;display:block;margin-bottom:6px}
+.ads-punch span{font-size:.92rem;opacity:.92}
+
+/* ===== CADÊNCIA ===== */
+.channels-legend{display:flex;flex-wrap:wrap;gap:14px;margin:28px 0 18px}
+.channels-legend span{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--gray);
+}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
+.dot.email{background:var(--blue-soft)}
+.dot.call{background:var(--white)}
+.dot.linkedin{background:#7BA6FF}
+.dot.whats{background:var(--wa)}
+.days{
+  display:flex;gap:10px;overflow-x:auto;
+  padding:6px 2px 16px;
+  scroll-snap-type:x proximity;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+}
+.day{
+  min-width:78px;scroll-snap-align:start;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:14px 10px;
+  text-align:center;cursor:pointer;
+  transition:border-color .2s, transform .2s;
+  border-bottom:3px solid var(--line);
+  font-family:'IBM Plex Mono',monospace;
+  color:var(--white);
+}
+.day:hover{transform:translateY(-2px)}
+.day.active{border-color:var(--blue);background:var(--panel-2)}
+.day small{display:block;font-size:.6rem;letter-spacing:.14em;color:var(--gray-2);text-transform:uppercase}
+.day b{display:block;font-size:1.15rem;margin:2px 0 8px}
+.day .day-dots{display:flex;gap:5px;justify-content:center;min-height:9px}
+.cadence-detail{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:22px;
+  min-height:96px;
+}
+.cadence-detail h4{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--blue-soft);
+  margin-bottom:12px;
+}
+.touch{display:flex;align-items:flex-start;gap:10px;padding:7px 0;color:var(--gray);font-size:.92rem}
+.touch .dot{margin-top:7px}
+.cadence-total{
+  margin-top:14px;display:flex;align-items:center;gap:14px;
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;background:linear-gradient(90deg, rgba(36,86,245,.14), transparent 60%);
+}
+.cadence-total b{font-family:'Archivo Black',sans-serif;font-size:1.9rem;color:var(--blue-soft)}
+.cadence-total span{color:var(--gray);font-size:.88rem}
+
+/* ===== TCM ===== */
+.tcm-grid{display:grid;gap:12px;margin-top:36px}
+@media(min-width:760px){.tcm-grid{grid-template-columns:repeat(3,1fr)}}
+.tcm{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:26px 22px;
+}
+.tcm .letter{
+  font-family:'Archivo Black',sans-serif;font-size:2.6rem;
+  color:var(--blue-soft);line-height:1;display:block;margin-bottom:12px;
+}
+.tcm h3{font-size:1rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.tcm h4{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gray-2);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;font-weight:400}
+.tcm p{color:var(--gray);font-size:.88rem}
+
+/* ===== SOLUÇÕES ===== */
+.tabs{display:flex;gap:8px;margin:34px 0 18px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  background:var(--panel);border:1px solid var(--line);color:var(--gray);
+  font-family:'IBM Plex Mono',monospace;font-size:.74rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:12px 18px;border-radius:100px;cursor:pointer;white-space:nowrap;
+  transition:all .2s;
+}
+.tab-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.tab-panel{display:none;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px 24px;animation:fadein .35s ease}
+.tab-panel.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tab-panel h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:1.3rem;margin-bottom:4px}
+.tab-panel .sub{color:var(--blue-soft);font-size:.9rem;font-weight:600;margin-bottom:16px}
+.tab-panel p{color:var(--gray);font-size:.94rem;margin-bottom:18px}
+.feat{list-style:none}
+.feat li{
+  color:var(--gray);font-size:.9rem;padding:9px 0 9px 26px;position:relative;
+  border-bottom:1px solid var(--line);
+}
+.feat li:last-child{border-bottom:none}
+.feat li::before{
+  content:"";position:absolute;left:2px;top:16px;
+  width:10px;height:10px;border-radius:3px;background:var(--blue);
+}
+
+/* ===== CASES (depoimentos) ===== */
+.cases-grid{display:grid;gap:14px;margin-top:38px}
+@media(min-width:860px){.cases-grid{grid-template-columns:repeat(3,1fr)}}
+.tcard{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:28px 24px;
+  display:flex;flex-direction:column;gap:20px;
+  position:relative;
+  transition:border-color .25s, transform .25s;
+}
+.tcard:hover{border-color:rgba(77,123,255,.5);transform:translateY(-3px)}
+.tcard::before{
+  content:"\201C";
+  font-family:'Archivo Black',sans-serif;
+  font-size:4.2rem;line-height:0;
+  color:var(--blue);opacity:.85;
+  display:block;height:26px;
+}
+.tcard .quote{font-size:1.02rem;line-height:1.6;color:var(--white)}
+.tcard .quote strong{color:var(--blue-soft)}
+.metric-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.metric-row b{font-family:'Archivo Black',sans-serif;font-size:2rem;color:var(--blue-soft);line-height:1}
+.metric-row span{color:var(--gray);font-size:.8rem}
+.person{
+  display:flex;gap:14px;align-items:center;
+  margin-top:auto;border-top:1px solid var(--line);padding-top:18px;
+}
+.avatar{
+  width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(140deg, var(--blue), #12308F);
+  font-family:'Archivo Black',sans-serif;font-size:.92rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.person b{display:block;font-size:.95rem;line-height:1.3}
+.person small{color:var(--gray);font-size:.78rem;line-height:1.4;display:block}
+.person .prod{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--blue-soft);
+  display:block;margin-top:3px;
+}
+
+/* ===== MARCAS ===== */
+.marquee{
+  overflow:hidden;margin-top:36px;padding:20px 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+}
+.marquee-track{display:flex;width:max-content;animation:scrollx 30s linear infinite}
+.marquee-track span{
+  display:flex;align-items:center;gap:44px;padding-right:44px;
+  font-family:'Archivo Black',sans-serif;text-transform:uppercase;
+  font-size:clamp(1.2rem,4vw,1.7rem);color:#3A3D48;white-space:nowrap;
+}
+.marquee-track i{width:9px;height:9px;background:var(--blue);border-radius:2px;flex-shrink:0;display:inline-block}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+.segs{
+  display:grid;gap:12px;margin-top:14px;
+}
+@media(min-width:640px){.segs{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:960px){.segs{grid-template-columns:repeat(4,1fr)}}
+.seg{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 20px 20px;text-align:left;cursor:pointer;color:var(--white);
+  display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;
+  font-family:'Inter',system-ui,sans-serif;
+  transition:border-color .25s, transform .25s;
+}
+.seg::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);
+  transform:scaleX(0);transform-origin:left;transition:transform .3s;
+}
+.seg:hover{border-color:rgba(77,123,255,.45);transform:translateY(-3px)}
+.seg:hover::before{transform:scaleX(1)}
+.seg .wm{
+  position:absolute;right:-8px;bottom:-26px;
+  font-family:'Archivo Black',sans-serif;font-size:6rem;line-height:1;
+  color:var(--white);opacity:.05;pointer-events:none;user-select:none;
+}
+.seg b{font-family:'Archivo Black',sans-serif;font-size:.95rem;text-transform:uppercase;letter-spacing:.02em;line-height:1.25}
+.seg small{color:var(--gray);font-size:.84rem;line-height:1.5}
+.seg em{
+  font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--blue-soft);
+  margin-top:auto;padding-top:6px;
+}
+.seg.more{
+  background:linear-gradient(140deg, rgba(36,86,245,.22), var(--panel) 70%);
+  border-color:rgba(77,123,255,.4);cursor:default;
+  align-items:center;justify-content:center;text-align:center;gap:4px;
+}
+.seg.more:hover{transform:none}
+.seg.more b{color:var(--blue-soft);font-size:1.5rem}
+
+/* ===== MODAL DEPOIMENTO ===== */
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center}
+@media(min-width:640px){.modal{align-items:center;padding:20px}}
+.modal.open{display:flex}
+.modal-backdrop{
+  position:absolute;inset:0;background:rgba(4,4,6,.72);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.modal-card{
+  position:relative;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:20px 20px 0 0;max-width:540px;width:100%;
+  padding:34px 26px 30px;animation:slideup .3s ease;
+}
+@media(min-width:640px){.modal-card{border-radius:20px}}
+@keyframes slideup{from{transform:translateY(34px);opacity:0}to{transform:none;opacity:1}}
+.modal-card::after{
+  content:"\201C";font-family:'Archivo Black',sans-serif;
+  font-size:4rem;line-height:1;color:var(--blue);
+  position:absolute;top:18px;left:26px;pointer-events:none;
+}
+.modal-close{
+  position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;
+  background:var(--panel);border:1px solid var(--line);color:var(--gray);
+  cursor:pointer;font-size:.95rem;line-height:1;z-index:2;
+}
+.modal-close:hover{color:var(--white);border-color:var(--gray-2)}
+.modal .badge{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue-soft);
+  border:1px solid rgba(77,123,255,.4);border-radius:100px;
+  padding:5px 12px;display:inline-block;margin:34px 0 16px;
+}
+.modal .quote{font-size:1.02rem;line-height:1.65;margin-bottom:20px}
+.modal .quote strong{color:var(--blue-soft)}
+
+/* ===== FOOTER ===== */
+footer{
+  border-top:1px solid var(--line);padding:44px 0 56px;text-align:center;
+}
+footer .logo{font-size:1.3rem;margin-bottom:8px}
+footer p{color:var(--gray-2);font-size:.8rem;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;text-transform:uppercase}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .hero-tag i{animation:none}
+  .marquee-track{animation:none}
+  .modal-card{animation:none}
+  *{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">RESOLVE<span>.</span></div>
+    <div class="nav-links">
+      <a href="#metodo">Método</a>
+      <a href="#solucoes">Soluções</a>
+      <a href="#cases">Cases</a>
+      <a href="#marcas">Marcas</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-tag"><i></i>Prospecção ativa não pausa</div>
+    <h1 class="display">Sua empresa<br><span class="line2">no radar do<br>cliente certo.</span></h1>
+    <p>Seu time de prospecção dedicado. Mais que LDRs, BDRs, SDRs e Closers: um comercial inteiro movido a dados, processo e cadência, que entrega resultado, não promessa.</p>
+
+    <div class="garantia reveal">
+      <b>ROI positivo ou <em>seu dinheiro de volta.</em></b>
+      <span>Se não fizer sentido pra você, não faz sentido pra gente. Critérios de elegibilidade definidos em contrato.</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal"><b><span class="count" data-target="400" data-prefix="+">0</span></b><small>empresas atendidas de norte a sul do Brasil</small></div>
+      <div class="stat reveal"><b><span class="count" data-target="50" data-prefix="+R$" data-suffix="M">0</span></b><small>em contratos negociados em resultado direto</small></div>
+      <div class="stat reveal"><b><span class="count" data-target="300" data-prefix="+" data-suffix="K">0</span></b><small>leads gerados por ano com prospecção multicanal</small></div>
+      <div class="stat reveal"><b><span class="count" data-target="28" data-suffix="%">0</span></b><small>de aumento médio de conversão dos clientes ativos</small></div>
+    </div>
+  </div>
+</header>
+
+<!-- QUEREMOS VENDER -->
+<section class="vender" id="vender">
+  <div class="wrap">
+    <div class="eyebrow">Direto ao ponto</div>
+    <h2 class="display">Queremos vender<br><span class="accent">pra você.</span></h2>
+    <div class="no-ads">Sem tráfego pago. Sem leilão de anúncio. <strong>Sem depender de indicação.</strong></div>
+    <p class="section-lead">A gente vai atrás do seu cliente ideal, um por um, com dado, cadência e gente treinada. Assim:</p>
+    <div class="steps">
+      <div class="step reveal">
+        <em>PASSO 01</em>
+        <h3>Encontramos</h3>
+        <p>Big Data cruza porte, faturamento, nicho e região para localizar o decisor certo, com nome e cargo, dentro do seu ICP.</p>
+      </div>
+      <div class="step reveal">
+        <em>PASSO 02</em>
+        <h3>Abordamos</h3>
+        <p>Até 28 toques em 4 canais ao longo de 14 dias. E-mail, telefone, LinkedIn e WhatsApp, até conquistar a atenção dele.</p>
+      </div>
+      <div class="step reveal">
+        <em>PASSO 03</em>
+        <h3>Entregamos</h3>
+        <p>Só passa quem tem tempo, capital e mentalidade para comprar. A reunião chega pronta pra virar contrato: fecha o seu closer, ou fecha o nosso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADS -->
+<section id="ads">
+  <div class="wrap">
+    <div class="eyebrow">O problema</div>
+    <h2 class="display section-title">Por que Ads não<br><span class="accent">é suficiente?</span></h2>
+    <div class="ads-grid">
+      <div class="ads-card reveal"><h3><em>01</em> CPL instável</h3><p>Custo por lead variável e dependente de plataformas externas que você não controla.</p></div>
+      <div class="ads-card reveal"><h3><em>02</em> Para, não vende</h3><p>Pausou o anúncio, parou de gerar lead. Zero previsibilidade de receita.</p></div>
+      <div class="ads-card reveal"><h3><em>03</em> Concorrência</h3><p>Você e seus concorrentes disputam os mesmos leilões de anúncio, todos os dias.</p></div>
+    </div>
+    <div class="ads-punch reveal">
+      <b>Prospecção ativa não pausa.</b>
+      <span>Não tem CPL. Não depende de plataforma. Você controla o volume todos os dias.</span>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTODO / CADÊNCIA -->
+<section id="metodo">
+  <div class="wrap">
+    <div class="eyebrow">O método</div>
+    <h2 class="display section-title">28 toques.<br><span class="accent">4 canais. 14 dias.</span></h2>
+    <p class="section-lead">Com IA, montamos um fluxo de cadência baseado no histórico de sucesso do seu ICP. Abraçamos o prospect por todos os lados até o break-up. Toque em um dia para ver os contatos.</p>
+
+    <div class="channels-legend">
+      <span><i class="dot email"></i>E-mail</span>
+      <span><i class="dot call"></i>Telefone</span>
+      <span><i class="dot linkedin"></i>LinkedIn</span>
+      <span><i class="dot whats"></i>WhatsApp</span>
+    </div>
+
+    <div class="days" id="days"></div>
+    <div class="cadence-detail" id="cadenceDetail"></div>
+
+    <div class="cadence-total reveal">
+      <b>28</b>
+      <span>pontos de contato por lead, distribuídos entre e-mail, cold call, LinkedIn e WhatsApp, que tem 90% de taxa de abertura contra 20% do e-mail.</span>
+    </div>
+  </div>
+</section>
+
+<!-- TCM -->
+<section id="tcm">
+  <div class="wrap">
+    <div class="eyebrow">Qualificação</div>
+    <h2 class="display section-title">Metodologia <span class="accent">TCM</span></h2>
+    <p class="section-lead">Todo lead qualificado pela Resolve passa por três filtros antes de chegar ao seu comercial. Reunião marcada é reunião que faz sentido.</p>
+    <div class="tcm-grid">
+      <div class="tcm reveal">
+        <span class="letter">T</span>
+        <h3>Tempo</h3><h4>Momento de compra</h4>
+        <p>O lead está no momento certo de decidir? Avaliamos sinais de urgência, dor ativa e janela de contratação.</p>
+      </div>
+      <div class="tcm reveal">
+        <span class="letter">C</span>
+        <h3>Capital</h3><h4>Recurso financeiro</h4>
+        <p>O lead tem capacidade de contratar? Cruzamos faturamento presumido, porte e perfil de investimento.</p>
+      </div>
+      <div class="tcm reveal">
+        <span class="letter">M</span>
+        <h3>Mentalidade</h3><h4>Nível de consciência</h4>
+        <p>O lead entende o problema e está aberto à solução? Avaliamos se reconhece a dor e está receptivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUÇÕES -->
+<section id="solucoes">
+  <div class="wrap">
+    <div class="eyebrow">Nossas soluções</div>
+    <h2 class="display section-title">Três formas de chegar<br><span class="accent">ao cliente certo.</span></h2>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="t1" role="tab" aria-selected="true">01 · Implantação</button>
+      <button class="tab-btn" data-tab="t2" role="tab" aria-selected="false">02 · Ativo Comercial</button>
+      <button class="tab-btn" data-tab="t3" role="tab" aria-selected="false">03 · Geração de Demanda</button>
+    </div>
+
+    <div class="tab-panel active" id="t1" role="tabpanel">
+      <h3>Implantação Comercial</h3>
+      <div class="sub">Instalamos dentro da sua empresa</div>
+      <p>Uma operação de prospecção que funciona com ou sem você. Em 12 meses, sua empresa tem processo, time treinado e autonomia total. A Resolve instala, você opera.</p>
+      <ul class="feat">
+        <li>ICP construído: quem, por quê, como</li>
+        <li>Scripts dos 28 pontos de contato</li>
+        <li>CRM configurado para outbound</li>
+        <li>Recrutamento e treinamento do BDR do cliente</li>
+        <li>Listas qualificadas, otimização de funil e playbook definitivo</li>
+      </ul>
+    </div>
+
+    <div class="tab-panel" id="t2" role="tabpanel">
+      <h3>Ativo Comercial</h3>
+      <div class="sub">Seu vendedor. Nossa operação.</div>
+      <p>Time dedicado exclusivamente ao seu negócio, recrutado, treinado e supervisionado pela Resolve. Para quem já tem quem fecha, mas não tem quem prospecte. Com opção de closer dedicado para o ciclo completo.</p>
+      <ul class="feat">
+        <li>Head + LDR + BDR exclusivos ao seu negócio</li>
+        <li>Prospecção por telefone, WhatsApp, LinkedIn e e-mail</li>
+        <li>Supervisão diária e relatórios semanais</li>
+        <li>Até 2 listas de 100 leads qualificados por mês</li>
+        <li>Perfil com closer: discovery, pitch, fechamento e pipeline</li>
+      </ul>
+    </div>
+
+    <div class="tab-panel" id="t3" role="tabpanel">
+      <h3>Geração de Demanda</h3>
+      <div class="sub">Resultado garantido</div>
+      <p>Reuniões qualificadas com decisores B2B, com mínimo garantido em contrato. A porta de entrada para quem quer sentir o outbound funcionando antes de internalizar.</p>
+      <ul class="feat">
+        <li>ICP definido e documentado na imersão</li>
+        <li>Prospecção ativa multicanal pelos 28 pontos de contato</li>
+        <li>Listas 100% geradas pela Resolve no seu ICP, nunca banco genérico</li>
+        <li>Qualificação pelo sistema de scoring Resolve</li>
+        <li>Relatório semanal de produção e mensal de performance</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section id="cases">
+  <div class="wrap">
+    <div class="eyebrow">Cases</div>
+    <h2 class="display section-title">Quem fez, <span class="accent">conta.</span></h2>
+    <p class="section-lead">Gente real, operação real, número real.</p>
+
+    <div class="cases-grid">
+
+      <!-- SUBSTITUIR: nome, cargo, empresa e números por cliente real com autorização -->
+      <article class="tcard reveal">
+        <p class="quote">A gente vivia de indicação, era uma loteria todo mês. Em 90 dias a Resolve montou a máquina dentro de casa: saímos de 4 para <strong>26 reuniões por mês</strong>, com um BDR nosso, treinado por eles. Hoje a operação roda sem mim.</p>
+        <div class="metric-row"><b>6,5x</b><span>mais reuniões por mês em 90 dias</span></div>
+        <div class="person">
+          <div class="avatar">RT</div>
+          <div>
+            <b>Ricardo Tavares</b>
+            <small>Diretor Comercial · Indústria de embalagens, SP</small>
+            <span class="prod">Implantação Comercial</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- SUBSTITUIR: nome, cargo, empresa e números por cliente real com autorização -->
+      <article class="tcard reveal">
+        <p class="quote">Eu pagava R$ 380 por lead de anúncio que não fechava e o time ficava parado esperando agenda. A Resolve colocou <strong>31 decisores na minha agenda em 60 dias</strong>. O CAC caiu 40% e fechamos 5 contratos no trimestre.</p>
+        <div class="metric-row"><b>-40%</b><span>de CAC nos primeiros 60 dias</span></div>
+        <div class="person">
+          <div class="avatar">MD</div>
+          <div>
+            <b>Marina Duarte</b>
+            <small>CEO · Software house B2B, Recife</small>
+            <span class="prod">Geração de Demanda</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- SUBSTITUIR: nome, cargo, empresa e números por cliente real com autorização -->
+      <article class="tcard reveal">
+        <p class="quote">Meus closers eram bons e viviam de agenda vazia. O time dedicado da Resolve prospecta todo dia e hoje a agenda tá cheia com <strong>3 semanas de antecedência</strong>. Crescemos 18% em 6 meses vendendo pra clientes que nunca tinham ouvido falar da gente.</p>
+        <div class="metric-row"><b>+18%</b><span>de faturamento em 6 meses</span></div>
+        <div class="person">
+          <div class="avatar">FA</div>
+          <div>
+            <b>Fábio Albuquerque</b>
+            <small>Sócio · Distribuidora B2B, Nordeste</small>
+            <span class="prod">Ativo Comercial</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- MARCAS -->
+<section id="marcas">
+  <div class="wrap">
+    <div class="eyebrow">Quem confia</div>
+    <h2 class="display section-title">Marcas já <span class="accent">conectadas</span></h2>
+    <p class="section-lead">De multinacional a operação local. Toque no seu segmento e veja o que mudou.</p>
+    <div class="marquee reveal" aria-hidden="true">
+      <div class="marquee-track">
+        <span>BMW <i></i> Coca-Cola <i></i> SERASA <i></i> Ecossistema NJR <i></i> Nestlé <i></i> Agência B2W <i></i> Globo Nordeste <i></i> Hunters <i></i> Baterias Moura <i></i> UP <i></i> Shopping Recife <i></i> Nova Digital <i></i> Unilever <i></i> Ecossistema NJR <i></i></span>
+        <span>BMW <i></i> Coca-Cola <i></i> SERASA <i></i> Ecossistema NJR <i></i> Nestlé <i></i> Agência B2W <i></i> Globo Nordeste <i></i> Hunters <i></i> Baterias Moura <i></i> UP <i></i> Shopping Recife <i></i> Nova Digital <i></i> Unilever <i></i> Ecossistema NJR <i></i></span>
+      </div>
+    </div>
+    <div class="segs">
+      <!-- SUBSTITUIR: os depoimentos de cada segmento ficam no objeto SEGS dentro do script, trocar por clientes reais com autorização -->
+      <button class="seg reveal" data-seg="s1"><span class="wm">A</span><b>Agência de Marketing</b><small>Vende crescimento pro cliente. E a própria agência vive de indicação.</small><em>Ver depoimento →</em></button>
+      <button class="seg reveal" data-seg="s2"><span class="wm">S</span><b>SaaS</b><small>CAC subindo e o inbound entregando curioso, não decisor.</small><em>Ver depoimento →</em></button>
+      <button class="seg reveal" data-seg="s3"><span class="wm">S</span><b>Segurança Armada</b><small>Contrato de segurança se ganha na mesa do decisor, não em panfleto.</small><em>Ver depoimento →</em></button>
+      <button class="seg reveal" data-seg="s4"><span class="wm">C</span><b>Contabilidade</b><small>Cliente não troca de contador sozinho. Alguém precisa provocar a troca.</small><em>Ver depoimento →</em></button>
+      <button class="seg reveal" data-seg="s5"><span class="wm">E</span><b>Eventos</b><small>Quem não entra no calendário do cliente em janeiro, não fatura em outubro.</small><em>Ver depoimento →</em></button>
+      <button class="seg reveal" data-seg="s6"><span class="wm">E</span><b>Energia Solar</b><small>Todo integrador disputa o mesmo leilão de anúncio. O decisor da indústria não tá lá.</small><em>Ver depoimento →</em></button>
+      <button class="seg reveal" data-seg="s7"><span class="wm">I</span><b>Indústria e Distribuição</b><small>Representante cuida da carteira antiga. Ninguém abre mercado novo.</small><em>Ver depoimento →</em></button>
+      <div class="seg more reveal"><b>+400</b><small>empresas atendidas de norte a sul</small></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- MODAL DEPOIMENTO POR SEGMENTO -->
+<div class="modal" id="segModal" role="dialog" aria-modal="true" aria-label="Depoimento de cliente">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <button class="modal-close" data-close aria-label="Fechar">✕</button>
+    <span class="badge" id="mBadge"></span>
+    <p class="quote" id="mQuote"></p>
+    <div class="metric-row"><b id="mMetric"></b><span id="mMetricLabel"></span></div>
+    <div class="person">
+      <div class="avatar" id="mAvatar"></div>
+      <div>
+        <b id="mName"></b>
+        <small id="mRole"></small>
+        <span class="prod" id="mProd"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="logo">RESOLVE<span>.</span></div>
+  <p>Solução, Decisão e Execução</p>
+</footer>
+
+<script>
+// ===== Cadência interativa =====
+const CH = {
+  email:   {cls:'email',    label:'E-mail'},
+  call:    {cls:'call',     label:'Telefone'},
+  linkedin:{cls:'linkedin', label:'LinkedIn'},
+  whats:   {cls:'whats',    label:'WhatsApp'}
+};
+const cadence = [
+  {d:1,  t:[['email','E-mail de abertura personalizado por ICP'],['linkedin','Visita e conexão no LinkedIn']]},
+  {d:2,  t:[['call','Cold call com script testado e validado'],['whats','WhatsApp de apresentação']]},
+  {d:3,  t:[['email','E-mail de valor com contexto do segmento']]},
+  {d:4,  t:[['linkedin','DM no LinkedIn com aquecimento prévio'],['call','Segunda tentativa de call']]},
+  {d:5,  t:[['whats','WhatsApp com gatilho de dor'],['email','Follow-up do e-mail de abertura']]},
+  {d:6,  t:[['call','Call em horário alternativo']]},
+  {d:7,  t:[['email','E-mail com prova social'],['linkedin','Interação com conteúdo do decisor']]},
+  {d:8,  t:[['whats','WhatsApp de retomada'],['call','Call direcionada ao decisor']]},
+  {d:9,  t:[['email','E-mail curto de resposta rápida']]},
+  {d:10, t:[['linkedin','DM com convite direto'],['whats','Áudio curto de conexão']]},
+  {d:11, t:[['call','Call de qualificação TCM'],['email','E-mail de agenda com horários']]},
+  {d:12, t:[['whats','WhatsApp de confirmação de interesse']]},
+  {d:13, t:[['call','Última tentativa de call'],['email','E-mail de pré break-up']]},
+  {d:14, t:[['whats','Break-up: porta aberta para o futuro'],['email','E-mail de break-up']]}
+];
+const daysEl = document.getElementById('days');
+const detailEl = document.getElementById('cadenceDetail');
+cadence.forEach((day,i)=>{
+  const el = document.createElement('button');
+  el.className = 'day' + (i===0?' active':'');
+  el.setAttribute('aria-label','Dia '+day.d);
+  el.innerHTML = '<small>Dia</small><b>'+String(day.d).padStart(2,'0')+'</b>'+
+    '<span class="day-dots">'+day.t.map(t=>'<i class="dot '+CH[t[0]].cls+'"></i>').join('')+'</span>';
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.day').forEach(d=>d.classList.remove('active'));
+    el.classList.add('active');
+    renderDetail(day);
+  });
+  daysEl.appendChild(el);
+});
+function renderDetail(day){
+  detailEl.innerHTML = '<h4>Dia '+String(day.d).padStart(2,'0')+' · '+day.t.length+
+    (day.t.length>1?' toques':' toque')+'</h4>'+
+    day.t.map(t=>'<div class="touch"><i class="dot '+CH[t[0]].cls+'"></i><div><strong style="color:#fff;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em">'+CH[t[0]].label+'</strong><br>'+t[1]+'</div></div>').join('');
+}
+renderDetail(cadence[0]);
+
+// ===== Tabs =====
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false')});
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected','true');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ===== Reveal on scroll =====
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// ===== Counters =====
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const co = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    co.unobserve(e.target);
+    const el = e.target;
+    const target = +el.dataset.target;
+    const prefix = el.dataset.prefix||'';
+    const suffix = el.dataset.suffix||'';
+    if(reduced){ el.textContent = prefix+target+suffix; return; }
+    const dur = 1300; const start = performance.now();
+    function tick(now){
+      const p = Math.min((now-start)/dur,1);
+      const eased = 1-Math.pow(1-p,3);
+      el.textContent = prefix+Math.round(target*eased)+suffix;
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+},{threshold:.5});
+document.querySelectorAll('.count').forEach(el=>co.observe(el));
+
+// ===== Depoimentos por segmento =====
+// SUBSTITUIR: trocar nomes, empresas e números por clientes reais com autorização
+const SEGS = {
+  s1:{seg:'Agência de Marketing', prod:'Ativo Comercial',
+      quote:'A gente entregava resultado pra todo mundo, menos pra gente. A Resolve montou nossa prospecção e hoje são <strong>22 reuniões por mês</strong> com empresas que nunca tinham ouvido falar da agência. Parei de depender de indicação.',
+      metric:'22', mlabel:'reuniões por mês', name:'Caio Menezes', role:'Sócio · Agência de performance, SP'},
+  s2:{seg:'SaaS', prod:'Geração de Demanda',
+      quote:'Nosso funil tava cheio de teste grátis que não virava contrato. A Resolve colocou decisor na mesa: <strong>31 demos qualificadas em 60 dias</strong> e o CAC caiu 40%.',
+      metric:'-40%', mlabel:'de CAC em 60 dias', name:'Renata Lopes', role:'CEO · SaaS de gestão, PE'},
+  s3:{seg:'Segurança Armada', prod:'Ativo Comercial',
+      quote:'Nesse mercado ninguém liga pedindo proposta, é relacionamento. A Resolve abriu portas que a gente rondava há anos: <strong>14 visitas técnicas por mês</strong> e 3 contratos anuais no primeiro trimestre.',
+      metric:'14', mlabel:'visitas técnicas por mês', name:'Marcos Vieira', role:'Diretor · Segurança patrimonial, PE'},
+  s4:{seg:'Contabilidade', prod:'Implantação Comercial',
+      quote:'Contabilidade cresce no boca a boca, e boca a boca não escala. Com a cadência da Resolve entraram <strong>38 CNPJs novos na carteira</strong> em 6 meses, todos no nosso ticket ideal.',
+      metric:'+38', mlabel:'CNPJs em 6 meses', name:'Patrícia Ramos', role:'Sócia · Contabilidade digital, Recife'},
+  s5:{seg:'Eventos', prod:'Geração de Demanda',
+      quote:'Evento corporativo se vende meses antes, e a gente só era lembrado em cima da hora. Hoje temos reunião com RH e marketing o ano inteiro: <strong>9 propostas ativas por mês</strong>.',
+      metric:'9', mlabel:'propostas ativas por mês', name:'Diego Sales', role:'Fundador · Produtora de eventos, PE'},
+  s6:{seg:'Energia Solar', prod:'Geração de Demanda',
+      quote:'Anúncio só trazia curioso de telhado residencial. A Resolve foi direto no CNPJ com conta de luz alta: <strong>17 estudos de viabilidade por mês</strong> e o maior contrato da história da empresa.',
+      metric:'17', mlabel:'estudos de viabilidade por mês', name:'Eduardo Farias', role:'Diretor Comercial · Integradora solar, NE'},
+  s7:{seg:'Indústria e Distribuição', prod:'Ativo Comercial',
+      quote:'Nossos representantes vendiam pros mesmos clientes há 10 anos. O BDR dedicado da Resolve abriu 3 estados novos e hoje <strong>40% da receita</strong> vem de cliente que não existia na base.',
+      metric:'40%', mlabel:'da receita vinda de clientes novos', name:'Sérgio Andrade', role:'Diretor · Indústria de alimentos, SP'}
+};
+const modal = document.getElementById('segModal');
+function openSeg(id){
+  const d = SEGS[id]; if(!d) return;
+  document.getElementById('mBadge').textContent = d.seg;
+  document.getElementById('mQuote').innerHTML = d.quote;
+  document.getElementById('mMetric').textContent = d.metric;
+  document.getElementById('mMetricLabel').textContent = d.mlabel;
+  document.getElementById('mAvatar').textContent = d.name.split(' ').map(n=>n[0]).slice(0,2).join('');
+  document.getElementById('mName').textContent = d.name;
+  document.getElementById('mRole').textContent = d.role;
+  document.getElementById('mProd').textContent = d.prod;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSeg(){
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.seg[data-seg]').forEach(b=>b.addEventListener('click',()=>openSeg(b.dataset.seg)));
+modal.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',closeSeg));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSeg(); });
+</script>
+</body>
+</html>
