@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resolve · Mesa de Diagnóstico</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08080A; --panel:#101014; --panel-2:#16161C; --line:#23232C;
+  --blue:#2456F5; --blue-soft:#4D7BFF; --white:#FFF; --gray:#9CA0AC; --gray-2:#5C5F6A;
+  --green:#2ECC8F; --amber:#F5B841; --red:#E85C5C; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--white);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;opacity:.12;pointer-events:none}
+.display{font-family:'Archivo Black',sans-serif;text-transform:uppercase;line-height:.98}
+.mono{font-family:'IBM Plex Mono',monospace}
+.accent{color:var(--blue-soft)}
+
+header{position:sticky;top:0;z-index:40;background:rgba(8,8,10,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top{max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-family:'Archivo Black',sans-serif;font-size:1rem}
+.logo span{color:var(--blue-soft)}
+.steps{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.step-pill{background:var(--panel);border:1px solid var(--line);color:var(--gray);font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 11px;border-radius:100px;cursor:pointer;white-space:nowrap;transition:all .2s}
+.step-pill.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.step-pill.done{border-color:rgba(77,123,255,.5);color:var(--blue-soft)}
+.tools{display:flex;gap:8px}
+.tool-btn{background:var(--panel);border:1px solid var(--line);color:var(--gray);font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.06em;padding:8px 12px;border-radius:8px;cursor:pointer}
+.tool-btn:hover{color:var(--white)}
+
+main{max-width:1100px;margin:0 auto;padding:34px 20px 90px;position:relative}
+.screen{display:none;animation:fade .3s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-soft);display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--blue)}
+h1.title{font-size:clamp(1.7rem,5vw,2.7rem);margin-bottom:10px}
+.lead{color:var(--gray);max-width:660px;margin-bottom:26px;font-size:.96rem}
+
+.hint{border-left:3px solid var(--amber);background:rgba(245,184,65,.06);padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;font-size:.8rem;color:var(--gray)}
+.hint b{color:var(--amber);font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:3px}
+body.hide-hints .hint{display:none}
+
+.grid2{display:grid;gap:14px}
+@media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+.grid3{display:grid;gap:12px}
+@media(min-width:760px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+.card h3{font-size:.92rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px;font-family:'Archivo Black',sans-serif}
+label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-2);margin:14px 0 6px}
+label:first-of-type{margin-top:0}
+input[type=text],input[type=number]{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;color:var(--white);padding:12px 14px;font-size:.95rem;font-family:'Inter',sans-serif}
+input:focus{outline:none;border-color:var(--blue)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{background:var(--panel-2);border:1px solid var(--line);color:var(--gray);padding:10px 14px;border-radius:10px;cursor:pointer;font-size:.86rem;transition:all .15s}
+.opt:hover{color:var(--white)}
+.opt.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.slider-row{display:flex;align-items:center;gap:14px}
+input[type=range]{flex:1;accent-color:var(--blue)}
+.slider-val{font-family:'Archivo Black',sans-serif;font-size:1.2rem;min-width:64px;text-align:right}
+
+.nav-row{display:flex;justify-content:space-between;gap:12px;margin-top:30px}
+.btn{border:none;border-radius:12px;padding:15px 26px;font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:.85rem;letter-spacing:.04em;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--gray)}
+.btn-ghost:hover{color:var(--white)}
+
+/* abertura */
+.agenda{background:var(--panel);border:1px solid rgba(77,123,255,.4);border-radius:var(--radius);padding:26px}
+.agenda h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:1rem;margin-bottom:16px}
+.agenda ol{list-style:none;counter-reset:ag}
+.agenda li{counter-increment:ag;padding:12px 0 12px 46px;position:relative;color:var(--gray);border-bottom:1px solid var(--line);font-size:.94rem}
+.agenda li:last-child{border-bottom:none}
+.agenda li b{color:var(--white)}
+.agenda li::before{content:counter(ag,decimal-leading-zero);position:absolute;left:0;top:12px;font-family:'Archivo Black',sans-serif;color:var(--blue-soft);font-size:1rem}
+
+/* devolutiva / ponte */
+.diag-grid{display:grid;gap:12px;margin-top:8px}
+@media(min-width:760px){.diag-grid{grid-template-columns:repeat(2,1fr)}}
+.diag-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;border-left-width:4px}
+.diag-card.ok{border-left-color:var(--green)}
+.diag-card.warn{border-left-color:var(--amber)}
+.diag-card.crit{border-left-color:var(--red)}
+.diag-card .tag{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;display:block}
+.diag-card.ok .tag{color:var(--green)}
+.diag-card.warn .tag{color:var(--amber)}
+.diag-card.crit .tag{color:var(--red)}
+.diag-card h4{font-size:.98rem;margin-bottom:5px}
+.diag-card p{color:var(--gray);font-size:.86rem}
+.ponte-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:0;overflow:hidden}
+.ponte-card .pc-dor{padding:16px 20px;border-left:4px solid var(--red)}
+.ponte-card .pc-dor small{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:4px}
+.ponte-card .pc-dor b{font-size:.95rem}
+.ponte-card .pc-sol{padding:16px 20px;background:rgba(36,86,245,.08);border-left:4px solid var(--blue)}
+.ponte-card .pc-sol small{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-soft);display:block;margin-bottom:4px}
+.ponte-card .pc-sol p{color:var(--gray);font-size:.9rem}
+.verdict{margin-top:16px;background:linear-gradient(100deg,rgba(36,86,245,.2),rgba(36,86,245,.03));border:1px solid rgba(77,123,255,.45);border-radius:var(--radius);padding:24px}
+.verdict b{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:1.15rem;display:block;margin-bottom:6px}
+.verdict p{color:var(--gray);font-size:.94rem}
+
+/* quem somos */
+.kpi{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.kpi b{font-family:'Archivo Black',sans-serif;font-size:clamp(1.2rem,4vw,1.7rem);color:var(--blue-soft);display:block}
+.kpi.green b{color:var(--green)}
+.kpi small{color:var(--gray);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-family:'IBM Plex Mono',monospace}
+.quem-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+@media(min-width:760px){.quem-stats{grid-template-columns:repeat(4,1fr)}}
+.marcas-line{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:center;font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:.9rem;color:var(--gray);line-height:2}
+.marcas-line i{color:var(--blue);font-style:normal}
+
+/* método */
+.metodo-num{font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.16em;color:var(--blue-soft);display:block;margin-bottom:8px}
+.tcm-letter{font-family:'Archivo Black',sans-serif;font-size:2rem;color:var(--blue-soft);line-height:1;display:block;margin-bottom:8px}
+.card p.small{color:var(--gray);font-size:.86rem}
+.toques-bar{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.toques-bar b{font-family:'Archivo Black',sans-serif;font-size:2rem;color:var(--blue-soft)}
+.toques-bar span{color:var(--gray);font-size:.88rem;flex:1;min-width:220px}
+
+/* custo */
+.cost-table{width:100%;border-collapse:collapse;margin-top:6px}
+.cost-table td{padding:13px 8px;border-bottom:1px solid var(--line);font-size:.92rem}
+.cost-table td:last-child{text-align:right;font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.cost-table tr.total td{border-bottom:none;padding-top:18px}
+.cost-table tr.total td:first-child{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:.85rem;color:var(--blue-soft)}
+.cost-table tr.total td:last-child{font-family:'Archivo Black',sans-serif;font-size:1.3rem}
+.cost-sub{color:var(--gray-2);font-size:.76rem;display:block}
+.ramp-box{margin-top:16px;background:var(--panel-2);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.ramp-box .big{font-family:'Archivo Black',sans-serif;font-size:clamp(1.8rem,6vw,2.8rem);color:var(--red);display:block;margin:6px 0 2px}
+.obs{margin-top:14px;font-size:.8rem;color:var(--gray-2);font-style:italic}
+.fontes{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:var(--gray-2)}
+
+/* value stack */
+.stack{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.stack-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;opacity:0;transform:translateX(-14px);transition:all .4s ease}
+.stack-item.in{opacity:1;transform:none}
+.stack-item .si-l b{display:block;font-size:.94rem}
+.stack-item .si-l small{color:var(--gray);font-size:.8rem}
+.stack-item .si-r{text-align:right;white-space:nowrap}
+.stack-item .price{font-family:'IBM Plex Mono',monospace;color:var(--gray-2);text-decoration:line-through;font-size:.85rem;display:block}
+.stack-item .free{font-family:'Archivo Black',sans-serif;color:var(--green);font-size:.8rem;text-transform:uppercase}
+.stack-total{margin-top:14px;background:linear-gradient(100deg,rgba(36,86,245,.22),rgba(36,86,245,.04));border:1px solid rgba(77,123,255,.5);border-radius:var(--radius);padding:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.stack-total span{color:var(--gray);font-size:.9rem}
+.stack-total b{font-family:'Archivo Black',sans-serif;font-size:clamp(1.5rem,5vw,2.2rem)}
+
+/* oferta */
+.offer-wrap{display:grid;gap:14px;margin-top:8px}
+@media(min-width:900px){.offer-wrap{grid-template-columns:1.2fr 1fr}}
+.offer-card{background:var(--panel);border:1px solid rgba(77,123,255,.5);border-radius:var(--radius);padding:28px;position:relative;overflow:hidden}
+.offer-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--blue)}
+.offer-card .badge{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-soft);border:1px solid rgba(77,123,255,.4);border-radius:100px;padding:5px 12px;display:inline-block;margin-bottom:14px}
+.offer-card h2{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:1.4rem;margin-bottom:4px}
+.offer-card .sub{color:var(--gray);font-size:.9rem;margin-bottom:18px}
+.offer-price{display:flex;align-items:baseline;gap:8px;margin:14px 0}
+.offer-price b{font-family:'Archivo Black',sans-serif;font-size:clamp(2rem,6vw,3rem)}
+.offer-price span{color:var(--gray)}
+.feat{list-style:none;margin-top:8px}
+.feat li{color:var(--gray);font-size:.88rem;padding:8px 0 8px 24px;position:relative;border-bottom:1px solid var(--line)}
+.feat li:last-child{border-bottom:none}
+.feat li::before{content:"";position:absolute;left:2px;top:15px;width:9px;height:9px;border-radius:3px;background:var(--blue)}
+.feat li.gold{color:var(--white)}
+.feat li.gold::before{background:var(--amber)}
+.testdrive{background:var(--panel-2);border:1px dashed var(--amber);border-radius:var(--radius);padding:24px}
+.testdrive h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;color:var(--amber);font-size:1rem;margin-bottom:8px}
+.testdrive p{color:var(--gray);font-size:.88rem;margin-bottom:10px}
+.testdrive .td-price{font-family:'Archivo Black',sans-serif;font-size:1.8rem;color:var(--white)}
+.testdrive .td-price small{font-size:.85rem;color:var(--gray);font-family:'Inter'}
+.roi-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-top:14px}
+.roi-box h3{font-family:'Archivo Black',sans-serif;text-transform:uppercase;font-size:.95rem;margin-bottom:14px}
+.roi-inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.roi-inputs label{min-height:34px;display:flex;align-items:flex-end;margin-top:0}
+.roi-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.down-link{margin-top:22px;text-align:right}
+.down-link button{background:none;border:none;color:var(--gray-2);font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:8px}
+.down-link button:hover{color:var(--gray)}
+
+/* renovação */
+.big-roi{background:linear-gradient(120deg,rgba(46,204,143,.16),transparent 70%);border:1px solid rgba(46,204,143,.5);border-radius:var(--radius);padding:28px;text-align:center;margin:16px 0}
+.big-roi b{font-family:'Archivo Black',sans-serif;font-size:clamp(2.2rem,8vw,4rem);color:var(--green);display:block}
+.big-roi span{color:var(--gray);font-size:.92rem}
+.mesa{background:var(--panel);border:1px solid rgba(245,184,65,.5);border-radius:var(--radius);padding:24px;text-align:center}
+.mesa b{font-family:'Archivo Black',sans-serif;font-size:clamp(1.6rem,6vw,2.4rem);color:var(--amber);display:block}
+.mesa span{color:var(--gray);font-size:.88rem}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <div class="logo">RESOLVE<span>.</span> <span class="mono" style="color:var(--gray-2);font-size:.6rem;letter-spacing:.14em">MESA DE DIAGNÓSTICO</span></div>
+    <div class="steps" id="stepsNav"></div>
+    <div class="tools">
+      <button class="tool-btn" id="tdToggle" title="Revelar/ocultar condição de 45 dias">🔒 45d</button>
+      <button class="tool-btn" id="toggleHints" title="Mostrar/ocultar dicas do closer">👁 Dicas</button>
+      <button class="tool-btn" id="copyBtn" title="Copiar resumo para o CRM">⧉ CRM</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ CONTEXTO (pré-call) ============ -->
+<section class="screen active" id="s-setup">
+  <div class="eyebrow">Pré-call · Não compartilhe a tela ainda</div>
+  <h1 class="display title">Contexto do lead</h1>
+  <p class="lead">Preencha antes da call com o que o BDR qualificou. É isso que alimenta todas as contas das próximas telas.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Quem é</h3>
+      <label>Nome do decisor</label>
+      <input type="text" id="f-nome" placeholder="Ex: Marcelo">
+      <label>Empresa</label>
+      <input type="text" id="f-empresa" placeholder="Ex: Alfa Contabilidade">
+      <label>Segmento</label>
+      <input type="text" id="f-segmento" placeholder="Ex: Contabilidade">
+    </div>
+    <div class="card">
+      <h3>Economics</h3>
+      <label>Faixa de faturamento mensal</label>
+      <div class="opts" data-field="faixa">
+        <button class="opt" data-v="ate50">Até 50K</button>
+        <button class="opt" data-v="50a100">50 a 100K</button>
+        <button class="opt" data-v="100a300">100 a 300K</button>
+        <button class="opt" data-v="300mais">300K+</button>
+      </div>
+      <label>Ticket médio mensal do cliente dele (R$)</label>
+      <input type="number" id="f-ticket" placeholder="Ex: 2500">
+      <label>Duração média de contrato (meses)</label>
+      <input type="number" id="f-duracao" value="12">
+    </div>
+  </div>
+  <div class="hint"><b>Closer · Rapport preparado</b>Antes da call: olhou o Instagram e o site da empresa? Sabe a cidade, o tempo de mercado, algo em comum? Rapport bom é específico ("vi que vocês abriram unidade nova") e dura 3 minutos, não 15.</div>
+  <div class="nav-row"><span></span><button class="btn btn-blue" onclick="go('s-abertura')">Abrir a call →</button></div>
+</section>
+
+<!-- ============ ABERTURA ============ -->
+<section class="screen" id="s-abertura">
+  <div class="eyebrow">Abertura · Minutos 0 a 5</div>
+  <h1 class="display title">O combinado da conversa</h1>
+  <p class="lead">Depois do quebra-gelo, compartilhe a tela nesta página e feche o contrato da call. Quem define a agenda, conduz.</p>
+  <div class="agenda">
+    <h3>Nossa conversa em 4 tempos</h3>
+    <ol>
+      <li><b>Seu momento.</b> Primeiro eu quero entender seu cenário a fundo: um diagnóstico rápido e direto da sua operação comercial.</li>
+      <li><b>Quem somos.</b> Te mostro quem é a Resolve, com quem trabalhamos e a metodologia que usamos.</li>
+      <li><b>O plano aplicado a você.</b> Cruzamos o diagnóstico com o que fazemos: o que resolveria, na prática, o seu caso.</li>
+      <li><b>Decisão.</b> Se fizer sentido pra você e pra gente, alinhamos os próximos passos hoje mesmo.</li>
+    </ol>
+  </div>
+  <div class="hint"><b>Closer · Script de abertura</b>"[Nome], hoje a gente estrutura prospecção pra mais de 400 empresas no Brasil. Antes de te mostrar qualquer coisa, quero entender seu cenário de verdade. Te proponho o seguinte: [lê os 4 tempos]. Se no final não fizer sentido, sem problema nenhum. Fechado?" O "fechado?" é obrigatório: é o micro-sim que autoriza a call inteira, inclusive a decisão no final.</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-setup')">← Voltar</button><button class="btn btn-blue" onclick="go('s-diag')">Ele topou → Diagnóstico</button></div>
+</section>
+
+<!-- ============ DIAGNÓSTICO ============ -->
+<section class="screen" id="s-diag">
+  <div class="eyebrow">Diagnóstico · Minutos 5 a 20</div>
+  <h1 class="display title">Diagnóstico comercial</h1>
+  <p class="lead">Você pergunta conversando e marca aqui. O lead vendo a tela percebe método, não improviso.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Operação</h3>
+      <label>Quem fecha as vendas hoje?</label>
+      <div class="opts" data-field="fecha">
+        <button class="opt" data-v="closer">Closer dedicado</button>
+        <button class="opt" data-v="dono">O próprio dono</button>
+        <button class="opt" data-v="ninguem">Ninguém definido</button>
+      </div>
+      <label>Taxa de fechamento das reuniões hoje</label>
+      <div class="opts" data-field="taxa">
+        <button class="opt" data-v="t10">Menos de 10%</button>
+        <button class="opt" data-v="t1020">10 a 20%</button>
+        <button class="opt" data-v="t2030">20 a 30%</button>
+        <button class="opt" data-v="t30">30%+</button>
+        <button class="opt" data-v="nsabe">Não sabe</button>
+      </div>
+      <label>Tem alguém prospectando todos os dias?</label>
+      <div class="opts" data-field="prospecta">
+        <button class="opt" data-v="sim">Sim</button>
+        <button class="opt" data-v="asvezes">Às vezes</button>
+        <button class="opt" data-v="nao">Não</button>
+      </div>
+      <label>CRM rodando?</label>
+      <div class="opts" data-field="crm">
+        <button class="opt" data-v="sim">Sim, atualizado</button>
+        <button class="opt" data-v="parado">Existe, mas parado</button>
+        <button class="opt" data-v="nao">Não tem</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Aquisição e momento</h3>
+      <label>De onde vem a maioria dos clientes?</label>
+      <div class="opts" data-field="origem">
+        <button class="opt" data-v="indicacao">Indicação</button>
+        <button class="opt" data-v="ads">Anúncios</button>
+        <button class="opt" data-v="outbound">Prospecção ativa</button>
+        <button class="opt" data-v="misto">Misto</button>
+      </div>
+      <label>% da receita que depende de indicação</label>
+      <div class="slider-row">
+        <input type="range" id="f-indicacao" min="0" max="100" step="5" value="60">
+        <span class="slider-val" id="v-indicacao">60%</span>
+      </div>
+      <label>Por que agora?</label>
+      <div class="opts" data-field="motivo">
+        <button class="opt" data-v="meta">Meta agressiva</button>
+        <button class="opt" data-v="caindo">Receita caindo</button>
+        <button class="opt" data-v="dependencia">Cansou de depender de indicação</button>
+        <button class="opt" data-v="expansao">Expansão</button>
+      </div>
+      <label>Se entrarem 10+ reuniões por mês, a operação dá conta?</label>
+      <div class="opts" data-field="capacidade">
+        <button class="opt" data-v="sim">Sim</button>
+        <button class="opt" data-v="nao">Precisa estruturar</button>
+      </div>
+    </div>
+  </div>
+  <div class="hint"><b>Closer</b>Não apresente NADA da Resolve ainda. A taxa de fechamento é pergunta de ouro: se ele tem closer e não sabe a taxa, anota. Se sabe e é baixa, esse vira um dos seus argumentos mais fortes lá na frente.</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-abertura')">← Voltar</button><button class="btn btn-blue" onclick="go('s-dev')">Gerar o raio-x →</button></div>
+</section>
+
+<!-- ============ RAIO-X ============ -->
+<section class="screen" id="s-dev">
+  <div class="eyebrow">Devolutiva · A virada da call</div>
+  <h1 class="display title" id="dev-title">O raio-x</h1>
+  <p class="lead">Devolva o diagnóstico com as palavras dele. É aqui que o lead percebe que você entendeu o negócio, antes mesmo de saber quem você é.</p>
+  <div class="diag-grid" id="diagGrid"></div>
+  <div class="verdict" id="verdictBox"></div>
+  <div class="hint" id="prescricaoHint"><b>Closer · Prescrição interna</b><span id="prescricaoTxt"></span></div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-diag')">← Voltar</button><button class="btn btn-blue" onclick="go('s-quem')">"Deixa eu te mostrar quem a gente é" →</button></div>
+</section>
+
+<!-- ============ QUEM SOMOS ============ -->
+<section class="screen" id="s-quem">
+  <div class="eyebrow">Credibilidade · Minutos 20 a 25</div>
+  <h1 class="display title">Quem é a <span class="accent">Resolve</span></h1>
+  <p class="lead">Somos mais que LDRs, BDRs, SDRs e Closers. Somos inteligência de mercado aplicada à prospecção outbound B2B. E esse problema que apareceu no seu raio-x, a gente resolve todos os dias.</p>
+  <div class="quem-stats">
+    <div class="kpi"><b>+400</b><small>empresas atendidas</small></div>
+    <div class="kpi"><b>+R$50M</b><small>contratos negociados</small></div>
+    <div class="kpi"><b>+300K</b><small>leads gerados/ano</small></div>
+    <div class="kpi green"><b>28%</b><small>aumento médio de conversão</small></div>
+  </div>
+  <div class="marcas-line">BMW <i>·</i> Coca-Cola <i>·</i> SERASA <i>·</i> Nestlé <i>·</i> Globo Nordeste <i>·</i> Baterias Moura <i>·</i> Shopping Recife <i>·</i> Unilever <i>·</i> Ecossistema NJR <i>·</i> e +400 empresas de norte a sul</div>
+  <div class="hint"><b>Closer</b>30 segundos nesta tela, não mais. Prova social não se explica, se mostra. Frase de saída: "e o jeito que a gente faz isso tem método, deixa eu te mostrar".</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-dev')">← Voltar</button><button class="btn btn-blue" onclick="go('s-metodo')">Mostrar o método →</button></div>
+</section>
+
+<!-- ============ MÉTODO ============ -->
+<section class="screen" id="s-metodo">
+  <div class="eyebrow">Metodologia · Minutos 25 a 32</div>
+  <h1 class="display title">Como a gente <span class="accent">trabalha</span></h1>
+  <p class="lead">Três movimentos, um filtro e uma cadência que não deixa o decisor escapar.</p>
+  <div class="grid3">
+    <div class="card"><span class="metodo-num">MOVIMENTO 01</span><h3>Encontramos</h3><p class="small">Big Data cruza porte, faturamento presumido, nicho e região para localizar o decisor certo, com nome e cargo, dentro do seu ICP. Nunca banco genérico.</p></div>
+    <div class="card"><span class="metodo-num">MOVIMENTO 02</span><h3>Abordamos</h3><p class="small">Cadência de até 28 toques em 14 dias por e-mail, telefone, LinkedIn e WhatsApp. Abraçamos o prospect por todos os lados até conquistar a atenção.</p></div>
+    <div class="card"><span class="metodo-num">MOVIMENTO 03</span><h3>Entregamos</h3><p class="small">A reunião chega qualificada e pronta pra virar contrato: fecha o seu closer, ou fecha o nosso.</p></div>
+  </div>
+  <div class="toques-bar">
+    <b>28</b>
+    <span>pontos de contato por lead. O WhatsApp sozinho tem 90% de taxa de abertura, contra 20% do e-mail. Por isso ninguém passa despercebido.</span>
+  </div>
+  <div class="grid3" style="margin-top:12px">
+    <div class="card"><span class="tcm-letter">T</span><h3 style="margin-bottom:4px">Tempo</h3><p class="small">O lead está no momento de decidir? Urgência, dor ativa e janela de contratação.</p></div>
+    <div class="card"><span class="tcm-letter">C</span><h3 style="margin-bottom:4px">Capital</h3><p class="small">Tem capacidade de contratar? Faturamento presumido, porte e perfil de investimento.</p></div>
+    <div class="card"><span class="tcm-letter">M</span><h3 style="margin-bottom:4px">Mentalidade</h3><p class="small">Entende o problema e está aberto? Só chega na sua agenda quem passa nos três.</p></div>
+  </div>
+  <div class="hint"><b>Closer</b>Conecta o método ao raio-x dele o tempo todo: "lembra que você me disse que depende de indicação? É exatamente isso que o movimento 1 e 2 matam". Método sem conexão com a dor é aula, não venda.</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-quem')">← Voltar</button><button class="btn btn-blue" onclick="go('s-ponte')">Aplicar isso ao caso dele →</button></div>
+</section>
+
+<!-- ============ PONTE: DIAGNÓSTICO x APLICAÇÃO ============ -->
+<section class="screen" id="s-ponte">
+  <div class="eyebrow">Aplicação · Minutos 32 a 40</div>
+  <h1 class="display title" id="ponte-title">No seu caso, <span class="accent">na prática</span></h1>
+  <p class="lead">Cada ponto que apareceu no raio-x, e o que exatamente a gente faz com ele.</p>
+  <div class="diag-grid" id="ponteGrid"></div>
+  <div class="verdict" id="ponteVerdict"></div>
+  <div class="hint"><b>Closer</b>Esta é a tela que vende. Leia cada card em voz alta no formato "você me disse X, a gente resolve com Y". Ao final, a pergunta de comprometimento: "se isso rodar do jeito que te mostrei, resolve seu problema?" Só avance pra ancoragem depois do SIM.</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-metodo')">← Voltar</button><button class="btn btn-blue" onclick="go('s-custo')">Ele disse sim → Ancoragem</button></div>
+</section>
+
+<!-- ============ ANCORAGEM: CUSTO REAL ============ -->
+<section class="screen" id="s-custo">
+  <div class="eyebrow">Ancoragem · Minutos 40 a 45</div>
+  <h1 class="display title">Quanto custa montar isso <span class="accent">por conta própria</span></h1>
+  <p class="lead">Números de mercado, não nossos. É o que qualquer empresa gasta para colocar uma operação de prospecção de pé.</p>
+  <div class="card">
+    <table class="cost-table" id="costTable">
+      <tr><td>Gestor comercial<span class="cost-sub">quem lidera e cobra o processo</span></td><td>R$ 10.000/mês</td></tr>
+      <tr><td>BDR (salário + encargos)<span class="cost-sub">quem executa a prospecção</span></td><td>R$ 4.500/mês</td></tr>
+      <tr><td>LDR<span class="cost-sub">quem gera e trata as listas</span></td><td>R$ 5.000/mês</td></tr>
+      <tr><td>Plataformas e ferramentas<span class="cost-sub">dados, disparo, telefonia, CRM</span></td><td>R$ 3.000/mês</td></tr>
+      <tr><td>Listas e enriquecimento de dados</td><td>R$ 1.200/mês</td></tr>
+      <tr><td>Custos fixos e comunicação</td><td>R$ 600/mês</td></tr>
+      <tr class="total"><td>Total da estrutura</td><td>R$ 24.300/mês</td></tr>
+    </table>
+    <div class="ramp-box">
+      <label style="margin-top:0">Tempo até a operação performar (recrutar + treinar + rampar)</label>
+      <div class="slider-row">
+        <input type="range" id="f-rampa" min="3" max="6" step="1" value="4">
+        <span class="slider-val" id="v-rampa">4 meses</span>
+      </div>
+      <span class="big" id="rampaTotal">R$ 97.200</span>
+      <span style="color:var(--gray);font-size:.88rem">investidos antes do primeiro resultado consistente</span>
+      <p class="obs">* E aqui não estamos contando demissões e reposições ao longo do caminho, novas contratações, reajustes de plataforma, turnover e o custo de cada erro de contratação.</p>
+      <p class="fontes">Fontes: levantamentos públicos de mercado · eesier (2026) · Datastone · Contact SDR</p>
+    </div>
+  </div>
+  <div class="hint"><b>Closer</b>Deixa o lead reagir ao número antes de avançar. A pergunta que destrava: "você já tinha feito essa conta?". O silêncio depois dela vale mais que qualquer argumento.</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-ponte')">← Voltar</button><button class="btn btn-blue" onclick="go('s-stack')">E o que você leva com a gente →</button></div>
+</section>
+
+<!-- ============ VALUE STACK ============ -->
+<section class="screen" id="s-stack">
+  <div class="eyebrow">Empilhamento · Minutos 45 a 50</div>
+  <h1 class="display title">Tudo que entra <span class="accent">na sua operação</span></h1>
+  <p class="lead">Item a item, com o valor que cada peça custaria contratada separadamente.</p>
+  <div class="stack" id="stackList"></div>
+  <div class="stack-total">
+    <span>Valor total se contratado separadamente, no primeiro trimestre:</span>
+    <b id="stackTotal">R$ 0</b>
+  </div>
+  <div class="hint"><b>Closer</b>Revela item por item (a tela anima sozinha). No final, NÃO fala o preço ainda. A frase de transição: "guarda esse número, porque agora vem a parte boa".</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-custo')">← Voltar</button><button class="btn btn-blue" onclick="go('s-oferta')">Revelar a proposta →</button></div>
+</section>
+
+<!-- ============ OFERTA ============ -->
+<section class="screen" id="s-oferta">
+  <div class="eyebrow">Proposta · Minutos 50 a 60</div>
+  <h1 class="display title" id="ofertaTitle">A proposta</h1>
+  <p class="lead" id="ofertaLead">Com base no diagnóstico, este é o caminho.</p>
+  <div class="offer-wrap">
+    <div class="offer-card">
+      <span class="badge" id="ofBadge">Prescrição</span>
+      <h2 id="ofNome">Ativo Comercial</h2>
+      <div class="sub" id="ofSub">Seu time de prospecção dedicado</div>
+      <div class="offer-price"><b id="ofPreco">R$ 15.000</b><span id="ofPer">/mês</span></div>
+      <ul class="feat" id="ofFeats"></ul>
+    </div>
+    <div>
+      <div class="testdrive" id="tdBox" style="display:none">
+        <h3>🔑 Test Drive de 45 dias</h3>
+        <p>Você não se amarra em contrato longo sem conhecer a gente. Nos primeiros 45 dias, a operação completa roda pelo <b style="color:var(--white)">preço de implantação:</b></p>
+        <div class="td-price">R$ 10.325 <small>/mês nos 45 dias, depois valor cheio automático</small></div>
+        <p style="margin-top:10px">Ao final, sentamos com os números na mesa: o que fechou, o que tem em pipeline, e o ROI calculado. Vagas limitadas à capacidade de alocação de BDR dedicado.</p>
+      </div>
+      <div class="hint"><b>Closer · Condição NÃO revelada</b>O test drive de 45 dias começa oculto e o lead não pode saber que existe. Só entra em jogo se o cliente NÃO fechar depois do downsell. Para revelar o card na tela: tecla T ou botão 🔒 45d no topo. Frase de abertura: "e se eu conseguir o valor do GD pra tudo isso que te apresentei, por 45 dias, faz sentido a gente avançar hoje?"</div>
+    </div>
+  </div>
+
+  <div class="roi-box">
+    <h3>Simulação de retorno · <span class="accent" id="roiEmpresa">sua operação</span></h3>
+    <div class="roi-inputs">
+      <div><label>Reuniões/mês</label><input type="number" id="r-reunioes" value="30"></div>
+      <div><label>Conversão (%)</label><input type="number" id="r-conv" value="20"></div>
+      <div><label>Ticket mensal (R$)</label><input type="number" id="r-ticket" value="2500"></div>
+      <div><label>Duração contrato (meses)</label><input type="number" id="r-dur" value="12"></div>
+    </div>
+    <div class="roi-out">
+      <div class="kpi"><b id="k-fech">0</b><small>fechamentos/ano</small></div>
+      <div class="kpi green"><b id="k-receita">R$ 0</b><small>receita nova (TCV/ano)</small></div>
+      <div class="kpi"><b id="k-invest">R$ 0</b><small>investimento no ano</small></div>
+      <div class="kpi green"><b id="k-roi">0x</b><small>retorno por real investido</small></div>
+    </div>
+  </div>
+
+  <div class="down-link">
+    <button onclick="go('s-gd')">"gostei, mas ficou caro" → plano alternativo</button>
+    <button onclick="go('s-renov')" style="color:var(--gray-2)">modo renovação (dia 46)</button>
+  </div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-stack')">← Voltar</button><span></span></div>
+</section>
+
+<!-- ============ DOWNSELL GD ============ -->
+<section class="screen" id="s-gd">
+  <div class="eyebrow">Plano alternativo · Porta de entrada</div>
+  <h1 class="display title">Geração de <span class="accent">Demanda</span></h1>
+  <p class="lead">O mesmo método, o mesmo funil e a mesma inteligência, em operação compartilhada. Para começar a receber reuniões qualificadas já, com o risco todo do nosso lado.</p>
+  <div class="offer-wrap">
+    <div class="offer-card">
+      <span class="badge">Entrada</span>
+      <h2>Geração de Demanda</h2>
+      <div class="sub">Reuniões qualificadas com decisores, mínimo garantido em contrato</div>
+      <div class="offer-price"><b>R$ 10.325</b><span>/mês</span></div>
+      <ul class="feat">
+        <li>ICP definido e documentado na imersão</li>
+        <li>Prospecção multicanal pelos 28 pontos de contato</li>
+        <li>Listas 100% geradas no seu ICP, nunca banco genérico</li>
+        <li>Qualificação TCM: só decisor com tempo, capital e mentalidade</li>
+        <li>Mínimo de reuniões garantido em contrato</li>
+        <li>ROI positivo ou seu dinheiro de volta (critérios em contrato)</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card">
+        <h3>O que muda pro Ativo</h3>
+        <ul class="feat">
+          <li>Operação compartilhada, não squad exclusivo</li>
+          <li>Volume de reuniões com teto (mínimo garantido, não máximo dedicado)</li>
+          <li>Sem closer da Resolve conduzindo fechamento</li>
+          <li>Caminho natural: 90 dias de resultado e migramos pro Ativo</li>
+        </ul>
+      </div>
+      <div class="hint"><b>Closer</b>O GD fecha com a garantia, não com desconto. Frase: "aqui o risco é meu: tem mínimo em contrato e ROI garantido. Se em 90 dias você não quiser subir pro time dedicado, o problema foi meu." Registra no CRM a data do dia 90.</div>
+    </div>
+  </div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-oferta')">← Voltar à proposta principal</button><span></span></div>
+</section>
+
+<!-- ============ RENOVAÇÃO ============ -->
+<section class="screen" id="s-renov">
+  <div class="eyebrow">Modo renovação · Call do dia 46</div>
+  <h1 class="display title">Os números <span class="accent">na mesa</span></h1>
+  <p class="lead">O test drive acabou. Esta tela transforma os 45 dias em uma conta que fecha sozinha. Preenche com os dados reais da operação e mostra pro cliente.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>O que geramos em 45 dias</h3>
+      <label>Valor mensal somado dos contratos que ele fechou (R$)</label>
+      <input type="number" id="rv-fechado" placeholder="Ex: 7500">
+      <label>Duração média desses contratos (meses)</label>
+      <input type="number" id="rv-dur" value="12">
+      <label>Valor mensal somado das oportunidades quentes em aberto (R$)</label>
+      <input type="number" id="rv-aberto" placeholder="Ex: 12000">
+      <label>Investimento no test drive (R$)</label>
+      <input type="number" id="rv-invest" value="15488">
+    </div>
+    <div>
+      <div class="big-roi">
+        <span>Cada R$ 1 investido na Resolve virou</span>
+        <b id="rv-roi">R$ 0</b>
+        <span id="rv-detalhe">em contratos assinados (TCV)</span>
+      </div>
+      <div class="mesa">
+        <span>E ainda tem</span>
+        <b id="rv-mesa">R$ 0</b>
+        <span>na mesa, em oportunidades quentes para trazer pro caixa</span>
+      </div>
+    </div>
+  </div>
+  <div class="verdict" style="margin-top:16px">
+    <b>Para continuar recebendo isso:</b>
+    <p>Ativo Comercial a R$ 15.000/mês, como combinamos no início da parceria. A máquina já está quente, a lista rodando e o BDR dentro do seu contexto. Parar agora é recomeçar do zero, inclusive o que está na mesa.</p>
+  </div>
+  <div class="hint"><b>Closer</b>A sequência: 1) mostra o ROI, 2) mostra o que está na mesa, 3) silêncio, 4) "faz sentido a gente parar?". A renovação não é uma venda, é a continuação de uma conta que já deu certo.</div>
+  <div class="nav-row"><button class="btn btn-ghost" onclick="go('s-oferta')">← Voltar</button><span></span></div>
+</section>
+
+</main>
+
+<script>
+/* ================= ESTADO ================= */
+const S = {faixa:null,fecha:null,taxa:null,prospecta:null,crm:null,origem:null,motivo:null,capacidade:null};
+const steps = [
+  {id:'s-setup',label:'1 Contexto'},
+  {id:'s-abertura',label:'2 Abertura'},
+  {id:'s-diag',label:'3 Diagnóstico'},
+  {id:'s-dev',label:'4 Raio-X'},
+  {id:'s-quem',label:'5 Quem Somos'},
+  {id:'s-metodo',label:'6 Método'},
+  {id:'s-ponte',label:'7 Aplicação'},
+  {id:'s-custo',label:'8 Ancoragem'},
+  {id:'s-stack',label:'9 Valor'},
+  {id:'s-oferta',label:'10 Proposta'},
+  {id:'s-gd',label:'GD'},
+  {id:'s-renov',label:'Dia 46'}
+];
+
+const nav = document.getElementById('stepsNav');
+steps.forEach((st,i)=>{
+  const b = document.createElement('button');
+  b.className = 'step-pill'+(i===0?' active':'');
+  b.textContent = st.label;
+  b.addEventListener('click',()=>go(st.id));
+  nav.appendChild(b);
+});
+
+function go(id){
+  const i = steps.findIndex(s=>s.id===id);
+  if(i<0) return;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.step-pill').forEach((p,j)=>{
+    p.classList.toggle('active',j===i);
+    p.classList.toggle('done',j<i);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='s-dev') renderDevolutiva();
+  if(id==='s-ponte') renderPonte();
+  if(id==='s-custo') calcRampa();
+  if(id==='s-stack') renderStack();
+  if(id==='s-oferta') renderOferta();
+}
+
+/* opções tipo botão */
+document.querySelectorAll('.opts').forEach(group=>{
+  group.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      group.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      S[group.dataset.field] = btn.dataset.v;
+    });
+  });
+});
+
+/* sliders */
+const ind = document.getElementById('f-indicacao');
+ind.addEventListener('input',()=>document.getElementById('v-indicacao').textContent = ind.value+'%');
+
+/* dicas do closer */
+document.getElementById('toggleHints').addEventListener('click',()=>document.body.classList.toggle('hide-hints'));
+document.addEventListener('keydown',e=>{ if(e.key==='h'||e.key==='H') document.body.classList.toggle('hide-hints'); });
+
+/* test drive: condição não revelada */
+function toggleTD(){
+  if(!S._tdAllowed) return;
+  const b = document.getElementById('tdBox');
+  b.style.display = (b.style.display==='none') ? 'block' : 'none';
+}
+document.getElementById('tdToggle').addEventListener('click',toggleTD);
+document.addEventListener('keydown',e=>{ if(e.key==='t'||e.key==='T') toggleTD(); });
+
+const fmt = n => 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+const taxaBaixa = () => (S.taxa==='t10'||S.taxa==='t1020'||S.taxa==='nsabe');
+
+/* ================= RAIO-X ================= */
+function achados(){
+  const cards = [];
+  if(S.prospecta==='nao' || S.prospecta==='asvezes')
+    cards.push({k:'prospeccao',s:'crit',tag:'Crítico',t:'Ninguém abre mercado',p:'Sem prospecção diária, o crescimento depende de sorte. Reunião nova não é evento, é rotina.'});
+  else if(S.prospecta==='sim')
+    cards.push({k:'prospeccao-ok',s:'ok',tag:'Ok',t:'Existe prospecção ativa',p:'A pergunta passa a ser volume, cadência e qualidade da lista.'});
+
+  const indv = +ind.value;
+  if(indv>=60) cards.push({k:'indicacao',s:'crit',tag:'Crítico',t:indv+'% da receita em indicação',p:'O canal que mais traz cliente é o único que você não controla. Isso não é aquisição, é loteria com boa reputação.'});
+  else if(indv>=30) cards.push({k:'indicacao',s:'warn',tag:'Atenção',t:indv+'% em indicação',p:'Boa base de confiança, mas ainda sem previsibilidade no funil.'});
+
+  if(S.fecha==='dono') cards.push({k:'dono',s:'warn',tag:'Atenção',t:'O dono no fechamento',p:'Funciona até a agenda lotar. O gargalo do crescimento é o seu calendário.'});
+  if(S.fecha==='ninguem') cards.push({k:'ninguem',s:'crit',tag:'Crítico',t:'Sem dono do fechamento',p:'Reunião boa sem processo de fechamento vira orçamento perdido.'});
+
+  if((S.fecha==='closer'||S.fecha==='dono') && S.taxa==='t10')
+    cards.push({k:'taxa',s:'crit',tag:'Crítico',t:'Fechamento abaixo de 10%',p:'A cada 10 reuniões, menos de 1 vira contrato. A última etapa do funil está desperdiçando tudo que entra nela.'});
+  else if((S.fecha==='closer'||S.fecha==='dono') && S.taxa==='t1020')
+    cards.push({k:'taxa',s:'warn',tag:'Atenção',t:'Taxa de fechamento entre 10 e 20%',p:'Dá pra subir. Cada ponto de conversão aqui vale mais que dezenas de leads novos no topo.'});
+  else if(S.taxa==='nsabe')
+    cards.push({k:'taxa',s:'warn',tag:'Atenção',t:'Taxa de fechamento desconhecida',p:'O que não é medido não melhora. Sem esse número, toda decisão comercial é no escuro.'});
+  else if(S.taxa==='t2030'||S.taxa==='t30')
+    cards.push({k:'taxa-ok',s:'ok',tag:'Ok',t:'Fechamento saudável',p:'Quem fecha, fecha bem. O que falta é volume qualificado na agenda.'});
+
+  if(S.crm==='nao'||S.crm==='parado') cards.push({k:'crm',s:'warn',tag:'Atenção',t:'Pipeline sem gestão',p:'Sem CRM vivo, oportunidade esfria em silêncio e ninguém percebe.'});
+  if(S.capacidade==='nao') cards.push({k:'capacidade',s:'warn',tag:'Atenção',t:'Capacidade de absorção',p:'Antes de ligar a torneira, precisamos garantir quem atende as reuniões.'});
+  return cards;
+}
+
+function renderDevolutiva(){
+  const empresa = document.getElementById('f-empresa').value || 'sua empresa';
+  document.getElementById('dev-title').innerHTML = 'O raio-x da <span class="accent">'+empresa+'</span>';
+  const cards = achados();
+  document.getElementById('diagGrid').innerHTML = cards.map(c=>'<div class="diag-card '+c.s+'"><span class="tag">'+c.tag+'</span><h4>'+c.t+'</h4><p>'+c.p+'</p></div>').join('');
+  const crit = cards.filter(c=>c.s==='crit');
+  const gargalo = crit.length ? crit[0].t.toLowerCase() : 'previsibilidade de agenda';
+  document.getElementById('verdictBox').innerHTML =
+    '<b>O gargalo, '+(document.getElementById('f-nome').value||'')+': '+gargalo+'.</b>'+
+    '<p>Tudo o mais funciona ou se resolve. Mas enquanto esse ponto ficar aberto, a receita da '+empresa+' continua dependendo de fatores que não estão sob seu controle.</p>';
+  document.getElementById('prescricaoTxt').textContent = prescrever().hint;
+}
+
+/* ================= PONTE ================= */
+const SOLUCOES = {
+  'prospeccao':'Um BDR dedicado prospectando todos os dias no seu ICP, pela cadência de 28 toques. Reunião nova deixa de ser evento e vira rotina de segunda a sexta.',
+  'indicacao':'Criamos o canal que você controla: Big Data encontra o decisor, a cadência multicanal o alcança. Você define o volume, todos os dias, sem depender de ninguém lembrar de você.',
+  'dono':'Sua agenda recebe só reunião qualificada pelo TCM, no horário que você definir. E se fizer sentido, nosso closer assume o fechamento e devolve seu tempo pra gestão.',
+  'ninguem':'Nosso closer conduz discovery, pitch e fechamento por você. O ciclo completo, da lista ao contrato assinado, sem você precisar contratar ninguém.',
+  'taxa':'Programa de elevação de taxa de fechamento: 100% das reuniões analisadas pela nossa IA, com devolutiva do que está travando cada call, mais mentoria comercial mensal com nosso time. Quem fecha continua sendo seu, só que fechando mais.',
+  'crm':'Configuramos seu CRM para outbound, com funil, cadências e dashboards ao vivo. Nenhuma oportunidade esfria em silêncio.',
+  'capacidade':'Rampamos o volume junto com a sua capacidade: começamos no ritmo que sua operação absorve e aceleramos conforme ela estrutura.'
+};
+function renderPonte(){
+  const nome = document.getElementById('f-nome').value || '';
+  document.getElementById('ponte-title').innerHTML = 'No seu caso'+(nome?', '+nome:'')+', <span class="accent">na prática</span>';
+  const cards = achados().filter(c=>SOLUCOES[c.k]);
+  const g = document.getElementById('ponteGrid');
+  if(!cards.length){
+    g.innerHTML = '<div class="diag-card warn"><span class="tag">Atenção</span><h4>Diagnóstico incompleto</h4><p>Volte à etapa 3 e marque as respostas para gerar a aplicação.</p></div>';
+  } else {
+    g.innerHTML = cards.map(c=>
+      '<div class="ponte-card"><div class="pc-dor"><small>Você me disse</small><b>'+c.t+'</b></div>'+
+      '<div class="pc-sol"><small>Na prática, a gente faz</small><p>'+SOLUCOES[c.k]+'</p></div></div>').join('');
+  }
+  document.getElementById('ponteVerdict').innerHTML =
+    '<b>A pergunta que importa:</b><p>Se isso rodar do jeito que te mostrei, com esse método, resolve o problema que a gente diagnosticou no começo da conversa?</p>';
+}
+
+/* ================= PRESCRIÇÃO ================= */
+function prescrever(){
+  if(!S.faixa) return {prod:'gd',hint:'Sem faixa marcada: volta e qualifica orçamento antes de ofertar.'};
+  if(S.faixa==='ate50') return {prod:'implantacao',hint:'Faixa até 50K = IMPLANTAÇÃO COMERCIAL (projeto 25-70K). Fee recorrente não fecha a conta pra ele; instalar a operação própria fecha. Abrir pela fase Ignição.'};
+  if(S.faixa==='50a100') return {prod:'gd',hint:'Faixa 50-100K = GD (10.325) com garantia. Plantar o upgrade pro Ativo no dia 90.'};
+  if(S.fecha==='closer') return {prod:'ativoA',hint:'Faixa 100K+ com closer próprio = ATIVO A (15K)'+(taxaBaixa()?' + destacar o programa de elevação de taxa (calls por IA + mentoria), já incluso.':'.')+' Se chiar no preço, desce pro GD pelo botão. Test drive só em último caso: tecla T ou botão 45d.'};
+  return {prod:'ativoB',hint:'Faixa 100K+ sem closer = ATIVO B (20K + variável). Se chiar, desce pro GD. Test drive só em último caso: tecla T ou botão 45d.'};
+}
+
+/* ================= CUSTO / RAMPA ================= */
+const CUSTO_MES = 24300;
+const rampa = document.getElementById('f-rampa');
+rampa.addEventListener('input',calcRampa);
+function calcRampa(){
+  document.getElementById('v-rampa').textContent = rampa.value+' meses';
+  document.getElementById('rampaTotal').textContent = fmt(CUSTO_MES * +rampa.value);
+}
+
+/* ================= VALUE STACK ================= */
+const STACK = [
+  {t:'Squad de prospecção completo',s:'Head + LDR + BDR dedicados, plataformas inclusas',v:24300,m:'/mês'},
+  {t:'Treinamento comercial do seu time',s:'Método Resolve aplicado em quem atende as reuniões',v:15000,m:''},
+  {t:'Consultoria comercial individualizada',s:'Estratégia revisada com especialista, todo mês',v:25000,m:''},
+  {t:'Playbook + scripts dos 28 toques',s:'Personalizados pro seu ICP, seus. Ficam com você',v:12000,m:''},
+  {t:'CRM configurado para outbound',s:'Funil, automações e cadências montados',v:8000,m:''},
+  {t:'Análise de 100% das reuniões por IA',s:'Cada call auditada, cada objeção mapeada. É daqui que sai o aumento da sua taxa de fechamento',v:5000,m:'/mês'},
+  {t:'Inteligência Big Data no seu ICP',s:'Listas frescas todo mês, nunca banco genérico',v:2500,m:'/mês'},
+  {t:'Dashboards de performance ao vivo',s:'Você vê a operação em tempo real, não em relatório de fim de mês',v:3000,m:''},
+  {t:'Garantia de substituição de BDR',s:'Não performou, trocamos. Sem custo, sem drama',v:0,m:'incalculável'}
+];
+function renderStack(){
+  const list = document.getElementById('stackList');
+  list.innerHTML = STACK.map(i=>{
+    const preco = i.v>0 ? '<span class="price">'+fmt(i.v)+i.m+'</span>' : '<span class="price">'+i.m+'</span>';
+    return '<div class="stack-item"><div class="si-l"><b>'+i.t+'</b><small>'+i.s+'</small></div><div class="si-r">'+preco+'<span class="free">Incluso</span></div></div>';
+  }).join('');
+  const trimestre = STACK.reduce((a,i)=> a + (i.m==='/mês'? i.v*3 : i.v),0);
+  document.getElementById('stackTotal').textContent = fmt(trimestre);
+  const items = list.querySelectorAll('.stack-item');
+  items.forEach((el,i)=> setTimeout(()=>el.classList.add('in'), 350*i));
+}
+
+/* ================= OFERTA ================= */
+const PROD = {
+  ativoA:{nome:'Ativo Comercial',sub:'Seu time de prospecção dedicado e exclusivo',preco:'R$ 15.000',per:'/mês',badge:'Prescrição · Time dedicado',feats:[
+    'Head + LDR + BDR exclusivos ao seu negócio','Prospecção diária: telefone, WhatsApp, LinkedIn e e-mail','Até 2 listas de 100 leads qualificados por mês','Supervisão diária + relatórios semanais','Tudo da pilha de valor incluso, sem custo adicional'],reunioes:30},
+  ativoB:{nome:'Ativo Comercial + Closer',sub:'Ciclo completo: da prospecção ao contrato assinado',preco:'R$ 20.000',per:'/mês',badge:'Prescrição · Ciclo completo',feats:[
+    'Tudo do time dedicado','Closer da Resolve conduz discovery, pitch e fechamento','Gestão de pipeline e follow-up de propostas','Variável apenas sobre o que fecharmos pra você','Tudo da pilha de valor incluso, sem custo adicional'],reunioes:30},
+  gd:{nome:'Geração de Demanda',sub:'Reuniões qualificadas com mínimo garantido',preco:'R$ 10.325',per:'/mês',badge:'Prescrição · Entrada garantida',feats:[
+    'Prospecção multicanal pelos 28 toques','Listas 100% no seu ICP','Qualificação TCM antes de qualquer agendamento','Mínimo de reuniões garantido em contrato','ROI positivo ou seu dinheiro de volta'],reunioes:10},
+  implantacao:{nome:'Implantação Comercial',sub:'Instalamos a máquina dentro da sua empresa. Você opera com autonomia',preco:'R$ 25 a 70 mil',per:'· projeto',badge:'Prescrição · Operação própria',feats:[
+    'IGNIÇÃO · 3 meses · R$ 25.000: ICP construído, scripts dos 28 toques, CRM configurado e treinamento do seu BDR',
+    'ACELERAÇÃO · 6 meses · R$ 40.000: tudo do Ignição + recrutamento completo do BDR + listas qualificadas mensais + otimização de funil',
+    'ESCALA · 12 meses · R$ 70.000: tudo do Aceleração + expansão de segmentos + 2º BDR se demandar + acesso direto ao CEO + playbook definitivo',
+    'Ao final: processo documentado, time treinado e autonomia total',
+    'Investimento em ativo próprio, não em fee recorrente'],reunioes:12}
+};
+const TAXA_MAP = {t10:10,t1020:15,t2030:25,t30:30};
+function renderOferta(){
+  const p = prescrever();
+  const d = PROD[p.prod];
+  const nome = document.getElementById('f-nome').value;
+  document.getElementById('ofertaTitle').innerHTML = nome ? 'A proposta pra você, <span class="accent">'+nome+'</span>' : 'A proposta';
+  document.getElementById('ofertaLead').textContent = 'Não vou te mostrar um cardápio. Com base no que você me contou, este é o caminho.';
+  document.getElementById('ofBadge').textContent = d.badge;
+  document.getElementById('ofNome').textContent = d.nome;
+  document.getElementById('ofSub').textContent = d.sub;
+  document.getElementById('ofPreco').textContent = d.preco;
+  document.getElementById('ofPer').textContent = d.per;
+  let feats = d.feats.slice();
+  if(p.prod==='ativoA' && (S.fecha==='closer'||S.fecha==='dono') && taxaBaixa()){
+    feats.unshift('GOLD::Programa de elevação da sua taxa de fechamento: 100% das calls do seu time analisadas por IA + mentoria comercial mensal. Incluso, sem custo adicional');
+  }
+  document.getElementById('ofFeats').innerHTML = feats.map(f=>{
+    if(f.startsWith('GOLD::')) return '<li class="gold">'+f.replace('GOLD::','')+'</li>';
+    return '<li>'+f+'</li>';
+  }).join('');
+  S._tdAllowed = (p.prod==='ativoA'||p.prod==='ativoB');
+  document.getElementById('tdBox').style.display = 'none';
+  const emp = document.getElementById('f-empresa').value;
+  if(emp) document.getElementById('roiEmpresa').textContent = emp;
+  const t = document.getElementById('f-ticket').value;
+  if(t) document.getElementById('r-ticket').value = t;
+  const du = document.getElementById('f-duracao').value;
+  if(du) document.getElementById('r-dur').value = du;
+  document.getElementById('r-reunioes').value = d.reunioes;
+  document.getElementById('r-conv').value = TAXA_MAP[S.taxa] || 20;
+  S._investAno = (p.prod==='ativoB') ? 240000 : (p.prod==='ativoA' ? 180000 : (p.prod==='implantacao' ? 40000 : 123900));
+  calcROI();
+}
+['r-reunioes','r-conv','r-ticket','r-dur'].forEach(id=>document.getElementById(id).addEventListener('input',calcROI));
+function calcROI(){
+  const re = +document.getElementById('r-reunioes').value||0;
+  const cv = (+document.getElementById('r-conv').value||0)/100;
+  const tk = +document.getElementById('r-ticket').value||0;
+  const du = +document.getElementById('r-dur').value||0;
+  const fech = Math.round(re*12*cv);
+  const receita = fech*tk*du;
+  const invest = S._investAno||180000;
+  document.getElementById('k-fech').textContent = fech;
+  document.getElementById('k-receita').textContent = fmt(receita);
+  document.getElementById('k-invest').textContent = fmt(invest);
+  document.getElementById('k-roi').textContent = invest>0 ? (receita/invest).toFixed(1).replace('.',',')+'x' : '0x';
+}
+
+/* ================= RENOVAÇÃO ================= */
+['rv-fechado','rv-dur','rv-aberto','rv-invest'].forEach(id=>document.getElementById(id).addEventListener('input',calcRenov));
+function calcRenov(){
+  const f = +document.getElementById('rv-fechado').value||0;
+  const d = +document.getElementById('rv-dur').value||0;
+  const a = +document.getElementById('rv-aberto').value||0;
+  const inv = +document.getElementById('rv-invest').value||1;
+  const tcv = f*d;
+  document.getElementById('rv-roi').textContent = 'R$ '+(tcv/inv).toFixed(2).replace('.',',');
+  document.getElementById('rv-detalhe').textContent = 'em contratos assinados ('+fmt(tcv)+' de TCV)';
+  document.getElementById('rv-mesa').textContent = fmt(a*d);
+}
+
+/* ================= COPIAR RESUMO CRM ================= */
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  const g = id=>document.getElementById(id).value||'-';
+  const p = prescrever();
+  const map = {closer:'Closer dedicado',dono:'Dono fecha',ninguem:'Ninguém definido',sim:'Sim',asvezes:'Às vezes',nao:'Não',parado:'Existe, parado',indicacao:'Indicação',ads:'Ads',outbound:'Outbound',misto:'Misto',meta:'Meta agressiva',caindo:'Receita caindo',dependencia:'Cansou de indicação',expansao:'Expansão',ate50:'Até 50K','50a100':'50-100K','100a300':'100-300K','300mais':'300K+',t10:'<10%',t1020:'10-20%',t2030:'20-30%',t30:'30%+',nsabe:'Não sabe'};
+  const txt = ['DIAGNÓSTICO RESOLVE · '+new Date().toLocaleDateString('pt-BR'),
+  'Lead: '+g('f-nome')+' · '+g('f-empresa')+' · '+g('f-segmento'),
+  'Faturamento: '+(map[S.faixa]||'-')+' | Ticket: R$'+g('f-ticket')+' | Contrato: '+g('f-duracao')+'m',
+  'Fechamento: '+(map[S.fecha]||'-')+' | Taxa: '+(map[S.taxa]||'-')+' | Prospecção: '+(map[S.prospecta]||'-')+' | CRM: '+(map[S.crm]||'-'),
+  'Origem: '+(map[S.origem]||'-')+' | Indicação: '+ind.value+'% | Motivo: '+(map[S.motivo]||'-')+' | Capacidade: '+(map[S.capacidade]||'-'),
+  'PRESCRIÇÃO: '+p.prod.toUpperCase()+' — '+p.hint].join('\n');
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b = document.getElementById('copyBtn');
+    b.textContent = '✓ Copiado'; setTimeout(()=>b.textContent='⧉ CRM',1600);
+  });
+});
+</script>
+</body>
+</html>
